@@ -6,7 +6,6 @@ local LocalPlayer = Players.LocalPlayer
 
 -- Función helper
 local function loadScript(url)
-    -- game:HttpGet es el método estándar y más compatible en executors
     local success, result = pcall(function() return game:HttpGet(url) end)
     if success and result then
         loadstring(result)()
@@ -18,7 +17,7 @@ end
 -- Ejecutar Join.Lua primero
 loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Rejoin/Join.Lua")
 
--- Limpieza para evitar múltiples GUIs si se ejecuta el loadstring varias veces
+-- Limpieza para evitar múltiples GUIs
 local guiName = "FBTools"
 local CoreGui = game:GetService("CoreGui")
 if CoreGui:FindFirstChild(guiName) then CoreGui[guiName]:Destroy() end
@@ -32,17 +31,12 @@ gui.Name = guiName
 gui.ResetOnSpawn = false
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- Proteger el GUI poniéndolo en CoreGui (evita detección y borrado)
-local success = pcall(function()
-    gui.Parent = CoreGui
-end)
-if not success then
-    gui.Parent = LocalPlayer.PlayerGui
-end
+local success = pcall(function() gui.Parent = CoreGui end)
+if not success then gui.Parent = LocalPlayer.PlayerGui end
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 200, 0, 80)
-frame.Position = UDim2.new(0, 10, 0.5, -40)
+frame.Size = UDim2.new(0, 200, 0, 160)
+frame.Position = UDim2.new(0, 10, 0.5, -80)
 frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 frame.BorderSizePixel = 0
 frame.Active = true
@@ -87,12 +81,40 @@ local rejoinCorner = Instance.new("UICorner")
 rejoinCorner.CornerRadius = UDim.new(0, 6)
 rejoinCorner.Parent = rejoinBtn
 
+-- Separador FARM
+local farmLabel = Instance.new("TextLabel")
+farmLabel.Size = UDim2.new(1, -20, 0, 20)
+farmLabel.Position = UDim2.new(0, 10, 0, 78)
+farmLabel.BackgroundTransparency = 1
+farmLabel.Text = "— FARM —"
+farmLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
+farmLabel.TextSize = 11
+farmLabel.Font = Enum.Font.GothamBold
+farmLabel.Parent = frame
+
+-- Botón Kaido
+local kaidoFarm = false
+
+local kaidoBtn = Instance.new("TextButton")
+kaidoBtn.Size = UDim2.new(1, -20, 0, 30)
+kaidoBtn.Position = UDim2.new(0, 10, 0, 102)
+kaidoBtn.BackgroundColor3 = Color3.fromRGB(150, 50, 50)
+kaidoBtn.BorderSizePixel = 0
+kaidoBtn.Text = "🔴 Kaido: OFF"
+kaidoBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+kaidoBtn.TextSize = 13
+kaidoBtn.Font = Enum.Font.GothamBold
+kaidoBtn.Parent = frame
+
+local kaidoCorner = Instance.new("UICorner")
+kaidoCorner.CornerRadius = UDim.new(0, 6)
+kaidoCorner.Parent = kaidoBtn
+
 -- ============================================
--- EVENTO BOTÓN AUTO REJOIN
+-- EVENTOS
 -- ============================================
 rejoinBtn.MouseButton1Click:Connect(function()
     autoRejoin = not autoRejoin
-
     if autoRejoin then
         rejoinBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
         rejoinBtn.Text = "🟢 Auto Rejoin: ON"
@@ -104,5 +126,21 @@ rejoinBtn.MouseButton1Click:Connect(function()
         rejoinBtn.Text = "🔴 Auto Rejoin: OFF"
         getgenv().AutoRejoinEnabled = false
         print("❌ Auto Rejoin desactivado")
+    end
+end)
+
+kaidoBtn.MouseButton1Click:Connect(function()
+    kaidoFarm = not kaidoFarm
+    if kaidoFarm then
+        kaidoBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+        kaidoBtn.Text = "🟢 Kaido: ON"
+        getgenv().KaidoFarmEnabled = true
+        loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/Kaido/check.lua")
+        print("✅ Kaido Farm activado")
+    else
+        kaidoBtn.BackgroundColor3 = Color3.fromRGB(150, 50, 50)
+        kaidoBtn.Text = "🔴 Kaido: OFF"
+        getgenv().KaidoFarmEnabled = false
+        print("❌ Kaido Farm desactivado")
     end
 end)
