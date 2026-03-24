@@ -14,8 +14,10 @@ local function loadScript(url)
     end
 end
 
--- Ejecutar Join.Lua primero
-loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Rejoin/Join.Lua")
+-- Ejecutar Join.Lua en thread separado para no bloquear la GUI
+task.spawn(function()
+    loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Rejoin/Join.Lua")
+end)
 
 -- Limpieza para evitar múltiples GUIs
 local guiName = "FBTools"
