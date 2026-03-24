@@ -6,21 +6,39 @@ local LocalPlayer = Players.LocalPlayer
 
 -- Función helper
 local function loadScript(url)
-    local res = request({Url = url, Method = "GET"})
-    loadstring(res.Body)()
+    -- game:HttpGet es el método estándar y más compatible en executors
+    local success, result = pcall(function() return game:HttpGet(url) end)
+    if success and result then
+        loadstring(result)()
+    else
+        warn("Error al cargar script: " .. tostring(result))
+    end
 end
 
 -- Ejecutar Join.Lua primero
 loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Rejoin/Join.Lua")
 
+-- Limpieza para evitar múltiples GUIs si se ejecuta el loadstring varias veces
+local guiName = "FBTools"
+local CoreGui = game:GetService("CoreGui")
+if CoreGui:FindFirstChild(guiName) then CoreGui[guiName]:Destroy() end
+if LocalPlayer.PlayerGui:FindFirstChild(guiName) then LocalPlayer.PlayerGui[guiName]:Destroy() end
+
 -- ============================================
 -- GUI
 -- ============================================
 local gui = Instance.new("ScreenGui")
-gui.Name = "FBTools"
+gui.Name = guiName
 gui.ResetOnSpawn = false
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-gui.Parent = LocalPlayer.PlayerGui
+
+-- Proteger el GUI poniéndolo en CoreGui (evita detección y borrado)
+local success = pcall(function()
+    gui.Parent = CoreGui
+end)
+if not success then
+    gui.Parent = LocalPlayer.PlayerGui
+end
 
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, 200, 0, 80)
@@ -78,11 +96,13 @@ rejoinBtn.MouseButton1Click:Connect(function()
     if autoRejoin then
         rejoinBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
         rejoinBtn.Text = "🟢 Auto Rejoin: ON"
+        getgenv().AutoRejoinEnabled = true
         loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Rejoin/Auto_rejoin.Lua")
         print("✅ Auto Rejoin activado")
     else
         rejoinBtn.BackgroundColor3 = Color3.fromRGB(150, 50, 50)
         rejoinBtn.Text = "🔴 Auto Rejoin: OFF"
+        getgenv().AutoRejoinEnabled = false
         print("❌ Auto Rejoin desactivado")
     end
 end)
