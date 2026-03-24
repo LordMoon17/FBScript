@@ -1,5 +1,6 @@
 -- ============================================
 -- Kaido Farm - Check Nika
+-- Solo verifica y equipa Nika si es necesario
 -- ============================================
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
@@ -39,31 +40,6 @@ local function equipSlot(slotNumber)
     end
 end
 
-local function enterGame(Loader)
-    LocalPlayer.PlayerGui.UI.MainMenu.Visible = false
-    LocalPlayer.PlayerGui:WaitForChild("DeathScreen").Enabled = false
-
-    Loader.RemoteNoYield:FireServer("Core", "LoadCharacter", {})
-    task.wait(0.1)
-    Loader.RemoteNoYield:FireServer("Main", "LoadCharacter")
-
-    task.wait(1)
-    local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-    character:WaitForChild("HumanoidRootPart")
-    workspace.CurrentCamera.CameraSubject = character:WaitForChild("Humanoid")
-    workspace.CurrentCamera.CameraType = Enum.CameraType.Follow
-
-    task.wait(2)
-    local originalSelect = Loader.Hotbar.Select
-    Loader.Hotbar.Select = function(...)
-        setupvalue(originalSelect, 4, Loader)
-        return originalSelect(...)
-    end
-    task.wait(0.1)
-    Loader.Hotbar.Select = nil
-    print("✅ Entrado al juego")
-end
-
 -- ============================================
 -- MAIN
 -- ============================================
@@ -80,9 +56,12 @@ if slotActual.Value ~= "Nika" then
     print("⚠️ Nika no equipada, reiniciando...")
     
     -- Matar personaje para volver al MainMenu
-    LocalPlayer.Character.Humanoid.Health = 0
+    local character = LocalPlayer.Character
+    if character and character:FindFirstChild("Humanoid") then
+        character.Humanoid.Health = 0
+    end
     
-    -- Esperar a que aparezca el MainMenu
+    -- Esperar MainMenu
     local mainMenu = LocalPlayer.PlayerGui.UI.MainMenu
     repeat task.wait(0.5) until mainMenu.Visible
     print("✅ MainMenu visible")
@@ -91,7 +70,6 @@ if slotActual.Value ~= "Nika" then
     equipSlot(1)
     task.wait(0.5)
     
-    -- Verificar
     slotActual = Loader.MainFunctions:GetSlot(LocalPlayer)
     if slotActual.Value == "Nika" then
         print("✅ Nika equipada correctamente")
@@ -103,5 +81,4 @@ else
     print("✅ Nika ya está equipada")
 end
 
--- Entrar al juego
-enterGame(Loader)
+print("✅ Check completado")
