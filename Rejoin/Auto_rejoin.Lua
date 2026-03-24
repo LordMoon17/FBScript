@@ -35,25 +35,26 @@ getgenv().AutoRejoinConnection = mainMenu:GetPropertyChangedSignal("Visible"):Co
         end
 
         if Loader then
-            Loader.RemoteNoYield:FireServer("Core", "LoadCharacter", {})
-            task.wait(0.1)
-            Loader.RemoteNoYield:FireServer("Main", "LoadCharacter")
+    Loader.RemoteNoYield:FireServer("Core", "LoadCharacter", {})
+    task.wait(0.1)
+    Loader.RemoteNoYield:FireServer("Main", "LoadCharacter")
 
-            local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-            character:WaitForChild("HumanoidRootPart")
-            workspace.CurrentCamera.CameraSubject = character:WaitForChild("Humanoid")
-            workspace.CurrentCamera.CameraType = Enum.CameraType.Follow
+    task.wait(1) -- Esperar antes de buscar el personaje
+    local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    character:WaitForChild("HumanoidRootPart")
+    workspace.CurrentCamera.CameraSubject = character:WaitForChild("Humanoid")
+    workspace.CurrentCamera.CameraType = Enum.CameraType.Follow
 
-            task.wait(2)
-            local originalSelect = Loader.Hotbar.Select
-            Loader.Hotbar.Select = function(...)
-                setupvalue(originalSelect, 4, Loader)
-                return originalSelect(...)
-            end
-            task.wait(0.1)
-            Loader.Hotbar.Select = nil
-            print("✅ Auto rejoin completado")
-        end
+    task.wait(2)
+    local originalSelect = Loader.Hotbar.Select
+    Loader.Hotbar.Select = function(...)
+        setupvalue(originalSelect, 4, Loader)
+        return originalSelect(...)
+    end
+    task.wait(0.1)
+    Loader.Hotbar.Select = nil
+    print("✅ Auto rejoin completado")
+end
     end
 end)
 
