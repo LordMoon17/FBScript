@@ -10,7 +10,14 @@ LocalPlayer.PlayerGui:WaitForChild("DeathScreen").Enabled = false
 
 local mainMenu = LocalPlayer.PlayerGui.UI.MainMenu
 
-mainMenu:GetPropertyChangedSignal("Visible"):Connect(function()
+-- Evitar conexiones duplicadas si se pulsa el botón múltiples veces
+if getgenv().AutoRejoinConnection then
+    getgenv().AutoRejoinConnection:Disconnect()
+end
+
+getgenv().AutoRejoinConnection = mainMenu:GetPropertyChangedSignal("Visible"):Connect(function()
+    if getgenv().AutoRejoinEnabled == false then return end
+
     if mainMenu.Visible then
         task.wait(0.5)
         mainMenu.Visible = false
