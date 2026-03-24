@@ -4,8 +4,14 @@
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
--- Ejecutar Join.lua primero
-loadstring(game:HttpGet("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Rejoin/Join.lua"))()
+-- Función helper
+local function loadScript(url)
+    local res = request({Url = url, Method = "GET"})
+    loadstring(res.Body)()
+end
+
+-- Ejecutar Join.Lua primero
+loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Rejoin/Join.Lua")
 
 -- ============================================
 -- GUI
@@ -47,7 +53,6 @@ titleCorner.Parent = title
 
 -- Botón Auto Rejoin
 local autoRejoin = false
-local rejoinConnection = nil
 
 local rejoinBtn = Instance.new("TextButton")
 rejoinBtn.Size = UDim2.new(1, -20, 0, 30)
@@ -73,17 +78,11 @@ rejoinBtn.MouseButton1Click:Connect(function()
     if autoRejoin then
         rejoinBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
         rejoinBtn.Text = "🟢 Auto Rejoin: ON"
-        -- Ejecutar Auto_rejoin.lua
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Rejoin/Auto_rejoin.lua"))()
+        loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Rejoin/Auto_rejoin.Lua")
         print("✅ Auto Rejoin activado")
     else
         rejoinBtn.BackgroundColor3 = Color3.fromRGB(150, 50, 50)
         rejoinBtn.Text = "🔴 Auto Rejoin: OFF"
-        -- Desconectar el auto rejoin
-        if rejoinConnection then
-            rejoinConnection:Disconnect()
-            rejoinConnection = nil
-        end
         print("❌ Auto Rejoin desactivado")
     end
 end)
