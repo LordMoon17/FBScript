@@ -42,9 +42,9 @@ local function getKaidoRoot()
         or kaido:FindFirstChildWhichIsA("BasePart")
 end
 
-local function getCharacterHumanoid()
+local function getCharacterHumanoidAndRoot()
     local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-    return character:FindFirstChildOfClass("Humanoid")
+    return character:FindFirstChildOfClass("Humanoid"), character:FindFirstChild("HumanoidRootPart")
 end
 
 if getgenv().KaidoAttackRunning then
@@ -59,14 +59,15 @@ task.spawn(function()
 
     while getgenv().KaidoFarmEnabled and getgenv().KaidoAttackRunning do
         local kaidoRoot = getKaidoRoot()
-        local humanoid = getCharacterHumanoid()
+        local humanoid, hrp = getCharacterHumanoidAndRoot()
 
-        if kaidoRoot and humanoid and humanoid.Health > 0 then
+        if kaidoRoot and humanoid and hrp and humanoid.Health > 0 then
             local now = os.clock()
 
             if now >= nextM1Cycle then
                 for _ = 1, M1_BURST_COUNT do
                     pcall(function()
+                        hrp.CFrame = CFrame.lookAt(hrp.Position, kaidoRoot.Position)
                         replicator:InvokeServer("Core", "M1", {})
                     end)
                     task.wait(M1_BURST_INTERVAL)

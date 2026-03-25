@@ -69,6 +69,7 @@ task.spawn(function()
             if now >= nextM1Cycle then
                 for _ = 1, M1_BURST_COUNT do
                     pcall(function()
+                        hrp.CFrame = CFrame.lookAt(hrp.Position, dummyRoot.Position)
                         replicator:InvokeServer("Core", "M1", {})
                     end)
                     task.wait(M1_BURST_INTERVAL)
