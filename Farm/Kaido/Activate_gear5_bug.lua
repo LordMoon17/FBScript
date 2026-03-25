@@ -3,6 +3,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local LocalPlayer = Players.LocalPlayer
 local replicator = ReplicatedStorage:WaitForChild("Replicator")
+local DRUM_WAIT = 3
+local GEAR5_WAIT = 3
 
 if getgenv().Gear5BugRunning then
     return
@@ -23,8 +25,10 @@ local function activateGear5Bug()
         end
 
         print("Drums " .. press .. "/4")
-        task.wait(0.2)
+        task.wait(DRUM_WAIT)
     end
+
+    task.wait(GEAR5_WAIT)
 
     local ok, err = pcall(function()
         replicator:InvokeServer("Nika", "Gear5", {})
