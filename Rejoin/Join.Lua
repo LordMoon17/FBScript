@@ -72,7 +72,12 @@ print("Personaje cargado correctamente")
 loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Habilidades%20bindeadas/nika_binds.lua")
 print("Binds de Nika cargados")
 
-if getgenv().KaidoFarmEnabled and hasKaidoInMap() then
-    loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/Kaido/reengage_kaido.lua")
-    print("Reenganche con Kaido cargado")
+if getgenv().KaidoFarmEnabled then
+    loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/Kaido/death_recovery.lua")
+    print("Recuperacion de muerte cargada")
+
+    if hasKaidoInMap() then
+        loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/Kaido/reengage_kaido.lua")
+        print("Reenganche con Kaido cargado")
+    end
 end

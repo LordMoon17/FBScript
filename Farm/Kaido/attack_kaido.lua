@@ -14,7 +14,6 @@ local M1_BURST_INTERVAL = 0.12
 local M1_CYCLE_COOLDOWN = 4
 local ABILITY_ORDER = {
     {name = "RocGun", cooldown = 13, range = 3.5, windup = 0.06},
-    {name = "NeoRedHawk", cooldown = 15, range = 2.5, windup = 0.12},
     {name = "RocGatling", cooldown = 17, range = 3.0, windup = 0.08},
     {name = "RedRoc", cooldown = 35, range = 4.0, windup = 0.08},
 }
@@ -54,23 +53,6 @@ local function alignToTarget(hrp, targetRoot, range)
 end
 
 local function castAbility(hrp, targetRoot, ability)
-    if ability.name == "NeoRedHawk" then
-        local offsets = {
-            -targetRoot.CFrame.LookVector * 2,
-            targetRoot.CFrame.LookVector * 2,
-            targetRoot.CFrame.RightVector * 2,
-            -targetRoot.CFrame.RightVector * 2,
-        }
-
-        for _, offset in ipairs(offsets) do
-            hrp.CFrame = CFrame.lookAt(targetRoot.Position + offset, targetRoot.Position)
-            task.wait(ability.windup or 0.05)
-            replicatorNoYield:FireServer("Nika", ability.name, {})
-            task.wait(0.05)
-        end
-        return
-    end
-
     alignToTarget(hrp, targetRoot, ability.range)
     task.wait(ability.windup or 0.05)
     replicatorNoYield:FireServer("Nika", ability.name, {})

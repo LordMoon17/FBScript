@@ -44,11 +44,36 @@ local function getKaidoRoot()
         or kaido:FindFirstChildWhichIsA("BasePart")
 end
 
+local function getKaidoModel()
+    local kaido = Workspace:FindFirstChild("Kaido", true)
+    if kaido and kaido:IsA("Model") then
+        return kaido
+    end
+    return nil
+end
+
 local function stopFollow()
     if getgenv().KaidoFollowConnection then
         getgenv().KaidoFollowConnection:Disconnect()
         getgenv().KaidoFollowConnection = nil
     end
+end
+
+local function returnToWaitMode()
+    if getgenv().KaidoReturnToWaitRunning then
+        return
+    end
+
+    getgenv().KaidoReturnToWaitRunning = true
+    stopFollow()
+    getgenv().KaidoAttackRunning = false
+    task.wait(1)
+
+    if getgenv().KaidoFarmEnabled then
+        loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/Kaido/wait_kaido.lua")
+    end
+
+    getgenv().KaidoReturnToWaitRunning = false
 end
 
 stopFollow()
@@ -62,13 +87,25 @@ getgenv().KaidoFollowConnection = RunService.Heartbeat:Connect(function()
     end
 
     local character, humanoid, hrp = getCharacterParts()
+    local kaidoModel = getKaidoModel()
     local kaidoRoot = getKaidoRoot()
 
-    if not character or not humanoid or not hrp or not kaidoRoot then
+    if not character or not humanoid or not hrp then
         return
     end
 
     if humanoid.Health <= 0 then
+        return
+    end
+
+    if not kaidoModel or not kaidoRoot then
+        returnToWaitMode()
+        return
+    end
+
+    local kaidoHumanoid = kaidoModel:FindFirstChildOfClass("Humanoid")
+    if not kaidoHumanoid or kaidoHumanoid.Health <= 0 then
+        returnToWaitMode()
         return
     end
 
