@@ -20,6 +20,18 @@ local function loadScript(url)
 end
 
 local function getDummyRoot()
+    local target = getgenv().DummyCycleTarget
+    if target and target.Parent and target:IsA("Model") then
+        local humanoid = target:FindFirstChildOfClass("Humanoid")
+        local root = target:FindFirstChild("HumanoidRootPart")
+            or target:FindFirstChild("PrimaryPart")
+            or target:FindFirstChildWhichIsA("BasePart")
+
+        if target.Name == "Respawn Dummy" and humanoid and humanoid.Health > 0 and root then
+            return root, target
+        end
+    end
+
     for _, descendant in ipairs(Workspace:GetDescendants()) do
         if descendant:IsA("Model") and descendant.Name == "Respawn Dummy" then
             local humanoid = descendant:FindFirstChildOfClass("Humanoid")
@@ -28,6 +40,7 @@ local function getDummyRoot()
                 or descendant:FindFirstChildWhichIsA("BasePart")
 
             if humanoid and humanoid.Health > 0 and root then
+                getgenv().DummyCycleTarget = descendant
                 return root, descendant
             end
         end

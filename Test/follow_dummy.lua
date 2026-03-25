@@ -58,6 +58,24 @@ local function getNearestDummyRoot(fromPosition)
     return nearestRoot
 end
 
+local function getCycleDummyRoot()
+    local target = getgenv().DummyCycleTarget
+    if not target or not target.Parent or not target:IsA("Model") or target.Name ~= TARGET_NAME then
+        return nil
+    end
+
+    local humanoid = target:FindFirstChildOfClass("Humanoid")
+    local root = target:FindFirstChild("HumanoidRootPart")
+        or target:FindFirstChild("PrimaryPart")
+        or target:FindFirstChildWhichIsA("BasePart")
+
+    if humanoid and humanoid.Health > 0 and root then
+        return root
+    end
+
+    return nil
+end
+
 local function stopFollow()
     if getgenv().DummyFollowConnection then
         getgenv().DummyFollowConnection:Disconnect()
@@ -74,6 +92,7 @@ local function returnToWaitMode()
     stopFollow()
     getgenv().DummyAttackRunning = false
     getgenv().DummyGear5Ready = false
+    getgenv().DummyCycleTarget = nil
     task.wait(1)
 
     if getgenv().DummyCycleEnabled then
@@ -97,7 +116,13 @@ getgenv().DummyFollowConnection = RunService.Heartbeat:Connect(function()
         return
     end
 
-    local dummyRoot = getNearestDummyRoot(hrp.Position)
+    local dummyRoot = nil
+    if getgenv().DummyCycleEnabled then
+        dummyRoot = getCycleDummyRoot()
+    else
+        dummyRoot = getNearestDummyRoot(hrp.Position)
+    end
+
     if not dummyRoot then
         if getgenv().DummyCycleEnabled then
             returnToWaitMode()

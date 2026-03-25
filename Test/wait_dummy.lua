@@ -54,6 +54,7 @@ local function onDummyDetected(model, source)
     end
 
     disconnectWatcher()
+    getgenv().DummyCycleTarget = model
     print("Dummy detectado por " .. tostring(source) .. ": " .. model:GetFullName())
     loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Test/ubication_dummy.lua")
 end

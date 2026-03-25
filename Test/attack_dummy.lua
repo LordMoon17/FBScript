@@ -43,6 +43,24 @@ local function getNearestDummyRoot(fromPosition)
     return nearestRoot
 end
 
+local function getCycleDummyRoot()
+    local target = getgenv().DummyCycleTarget
+    if not target or not target.Parent or not target:IsA("Model") or target.Name ~= TARGET_NAME then
+        return nil
+    end
+
+    local humanoid = target:FindFirstChildOfClass("Humanoid")
+    local root = target:FindFirstChild("HumanoidRootPart")
+        or target:FindFirstChild("PrimaryPart")
+        or target:FindFirstChildWhichIsA("BasePart")
+
+    if humanoid and humanoid.Health > 0 and root then
+        return root
+    end
+
+    return nil
+end
+
 local function getCharacterHumanoidAndRoot()
     local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
     return character:FindFirstChildOfClass("Humanoid"), character:FindFirstChild("HumanoidRootPart")
@@ -72,7 +90,14 @@ task.spawn(function()
 
     while (getgenv().DummyTestEnabled or getgenv().DummyCycleEnabled) and getgenv().DummyAttackRunning do
         local humanoid, hrp = getCharacterHumanoidAndRoot()
-        local dummyRoot = hrp and getNearestDummyRoot(hrp.Position) or nil
+        local dummyRoot = nil
+        if hrp then
+            if getgenv().DummyCycleEnabled then
+                dummyRoot = getCycleDummyRoot()
+            else
+                dummyRoot = getNearestDummyRoot(hrp.Position)
+            end
+        end
 
         if humanoid and hrp and humanoid.Health > 0 and dummyRoot then
             local now = os.clock()
