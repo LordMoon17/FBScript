@@ -22,6 +22,11 @@ local function hasKaidoInMap()
     return kaido ~= nil
 end
 
+local function hasBossInMap(name)
+    local boss = Workspace:FindFirstChild(name, true)
+    return boss ~= nil
+end
+
 local function forceCameraToCharacter(character)
     local humanoid = character:WaitForChild("Humanoid")
     local camera = workspace.CurrentCamera
@@ -79,6 +84,38 @@ if getgenv().KaidoFarmEnabled then
     if hasKaidoInMap() then
         loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/Kaido/reengage_kaido.lua")
         print("Reenganche con Kaido cargado")
+    end
+end
+
+if getgenv().WholeCakeFarmEnabled then
+    loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/WholeCake/death_recovery.lua")
+    print("Recuperacion de muerte Whole Cake cargada")
+
+    if hasBossInMap("Katakuri") then
+        loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/WholeCake/Katakuri/reengage.lua")
+        print("Reenganche con Katakuri cargado")
+    elseif hasBossInMap("Cake Queen") then
+        loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/WholeCake/CakeQueen/reengage.lua")
+        print("Reenganche con Cake Queen cargado")
+    else
+        loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/WholeCake/wait_wholecake.lua")
+        print("Espera de Whole Cake cargada")
+    end
+elseif getgenv().KatakuriFarmEnabled then
+    loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/WholeCake/Katakuri/death_recovery.lua")
+    print("Recuperacion de muerte Katakuri cargada")
+
+    if hasBossInMap("Katakuri") then
+        loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/WholeCake/Katakuri/reengage.lua")
+        print("Reenganche con Katakuri cargado")
+    end
+elseif getgenv().CakeQueenFarmEnabled then
+    loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/WholeCake/CakeQueen/death_recovery.lua")
+    print("Recuperacion de muerte Cake Queen cargada")
+
+    if hasBossInMap("Cake Queen") then
+        loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/WholeCake/CakeQueen/reengage.lua")
+        print("Reenganche con Cake Queen cargado")
     end
 end
 

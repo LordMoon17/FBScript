@@ -41,8 +41,8 @@ if not success then
 end
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 200, 0, 240)
-frame.Position = UDim2.new(0, 10, 0.5, -120)
+frame.Size = UDim2.new(0, 220, 0, 280)
+frame.Position = UDim2.new(0, 10, 0.5, -140)
 frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 frame.BorderSizePixel = 0
 frame.Active = true
@@ -79,6 +79,9 @@ farmLabel.Font = Enum.Font.GothamBold
 farmLabel.Parent = frame
 
 local kaidoFarm = false
+local wholeCakeFarm = false
+local dummyTestEnabled = false
+local dummyCycleEnabled = false
 
 local kaidoBtn = Instance.new("TextButton")
 kaidoBtn.Size = UDim2.new(1, -20, 0, 30)
@@ -95,9 +98,24 @@ local kaidoCorner = Instance.new("UICorner")
 kaidoCorner.CornerRadius = UDim.new(0, 6)
 kaidoCorner.Parent = kaidoBtn
 
+local wholeCakeBtn = Instance.new("TextButton")
+wholeCakeBtn.Size = UDim2.new(1, -20, 0, 30)
+wholeCakeBtn.Position = UDim2.new(0, 10, 0, 98)
+wholeCakeBtn.BackgroundColor3 = Color3.fromRGB(150, 50, 50)
+wholeCakeBtn.BorderSizePixel = 0
+wholeCakeBtn.Text = "Whole Cake: OFF"
+wholeCakeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+wholeCakeBtn.TextSize = 13
+wholeCakeBtn.Font = Enum.Font.GothamBold
+wholeCakeBtn.Parent = frame
+
+local wholeCakeCorner = Instance.new("UICorner")
+wholeCakeCorner.CornerRadius = UDim.new(0, 6)
+wholeCakeCorner.Parent = wholeCakeBtn
+
 local testBtn = Instance.new("TextButton")
 testBtn.Size = UDim2.new(1, -20, 0, 30)
-testBtn.Position = UDim2.new(0, 10, 0, 98)
+testBtn.Position = UDim2.new(0, 10, 0, 134)
 testBtn.BackgroundColor3 = Color3.fromRGB(60, 90, 150)
 testBtn.BorderSizePixel = 0
 testBtn.Text = "Test TP + Bug"
@@ -110,11 +128,9 @@ local testCorner = Instance.new("UICorner")
 testCorner.CornerRadius = UDim.new(0, 6)
 testCorner.Parent = testBtn
 
-local dummyTestEnabled = false
-
 local dummyBtn = Instance.new("TextButton")
 dummyBtn.Size = UDim2.new(1, -20, 0, 30)
-dummyBtn.Position = UDim2.new(0, 10, 0, 134)
+dummyBtn.Position = UDim2.new(0, 10, 0, 170)
 dummyBtn.BackgroundColor3 = Color3.fromRGB(140, 90, 40)
 dummyBtn.BorderSizePixel = 0
 dummyBtn.Text = "Dummy Test: OFF"
@@ -127,11 +143,9 @@ local dummyCorner = Instance.new("UICorner")
 dummyCorner.CornerRadius = UDim.new(0, 6)
 dummyCorner.Parent = dummyBtn
 
-local dummyCycleEnabled = false
-
 local dummyCycleBtn = Instance.new("TextButton")
 dummyCycleBtn.Size = UDim2.new(1, -20, 0, 30)
-dummyCycleBtn.Position = UDim2.new(0, 10, 0, 170)
+dummyCycleBtn.Position = UDim2.new(0, 10, 0, 206)
 dummyCycleBtn.BackgroundColor3 = Color3.fromRGB(80, 60, 120)
 dummyCycleBtn.BorderSizePixel = 0
 dummyCycleBtn.Text = "Dummy Cycle: OFF"
@@ -161,6 +175,32 @@ kaidoBtn.MouseButton1Click:Connect(function()
         getgenv().KaidoFarmEnabled = false
         getgenv().KaidoGear5Ready = false
         print("Kaido Farm desactivado")
+    end
+end)
+
+wholeCakeBtn.MouseButton1Click:Connect(function()
+    wholeCakeFarm = not wholeCakeFarm
+
+    if wholeCakeFarm then
+        wholeCakeBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+        wholeCakeBtn.Text = "Whole Cake: ON"
+        getgenv().WholeCakeFarmEnabled = true
+        getgenv().KatakuriFarmEnabled = true
+        getgenv().CakeQueenFarmEnabled = true
+        getgenv().KatakuriGear5Ready = false
+        getgenv().CakeQueenGear5Ready = false
+        loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Rejoin/Join.Lua")
+        loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/WholeCake/wait_wholecake.lua")
+        print("Whole Cake Farm activado")
+    else
+        wholeCakeBtn.BackgroundColor3 = Color3.fromRGB(150, 50, 50)
+        wholeCakeBtn.Text = "Whole Cake: OFF"
+        getgenv().WholeCakeFarmEnabled = false
+        getgenv().KatakuriFarmEnabled = false
+        getgenv().CakeQueenFarmEnabled = false
+        getgenv().KatakuriGear5Ready = false
+        getgenv().CakeQueenGear5Ready = false
+        print("Whole Cake Farm desactivado")
     end
 end)
 
