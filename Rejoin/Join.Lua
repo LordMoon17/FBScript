@@ -51,14 +51,7 @@ workspace.CurrentCamera.CameraType = Enum.CameraType.Follow
 print("Camara forzada al personaje")
 
 task.wait(2)
-local originalSelect = Loader.Hotbar.Select
-Loader.Hotbar.Select = function(...)
-    setupvalue(originalSelect, 4, Loader)
-    return originalSelect(...)
-end
-task.wait(0.1)
-Loader.Hotbar.Select = nil
-print("Hotbar funcionando")
+print("Personaje cargado correctamente")
 
 loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Habilidades%20bindeadas/nika_binds.lua")
 print("Binds de Nika cargados")
