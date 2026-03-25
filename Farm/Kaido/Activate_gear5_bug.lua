@@ -12,6 +12,18 @@ end
 
 getgenv().Gear5BugRunning = true
 
+local function loadScript(url)
+    local success, result = pcall(function()
+        return game:HttpGet(url)
+    end)
+
+    if success and result then
+        loadstring(result)()
+    else
+        warn("Error al cargar script: " .. tostring(result))
+    end
+end
+
 local function activateGear5Bug()
     for press = 1, 4 do
         local ok, err = pcall(function()
@@ -46,6 +58,20 @@ local function activateGear5Bug()
     if humanoid then
         humanoid.Health = 0
     end
+
+    local mainMenu = LocalPlayer.PlayerGui.UI.MainMenu
+    repeat
+        task.wait(0.2)
+    until mainMenu.Visible or getgenv().KaidoFarmEnabled == false
+
+    if getgenv().KaidoFarmEnabled == false then
+        getgenv().Gear5BugRunning = false
+        return
+    end
+
+    loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Rejoin/Join.Lua")
+    task.wait(2)
+    loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/Kaido/follow_kaido.lua")
 
     task.wait(1)
     getgenv().Gear5BugRunning = false
