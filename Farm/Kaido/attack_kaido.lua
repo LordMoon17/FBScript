@@ -13,10 +13,10 @@ local M1_BURST_COUNT = 5
 local M1_BURST_INTERVAL = 0.12
 local M1_CYCLE_COOLDOWN = 4
 local ABILITY_ORDER = {
-    {name = "RocGun", cooldown = 13},
-    {name = "NeoRedHawk", cooldown = 15},
-    {name = "RocGatling", cooldown = 17},
-    {name = "RedRoc", cooldown = 35},
+    {name = "RocGun", cooldown = 13, range = 3.5, windup = 0.06},
+    {name = "NeoRedHawk", cooldown = 15, range = 2.5, windup = 0.12},
+    {name = "RocGatling", cooldown = 17, range = 3.0, windup = 0.08},
+    {name = "RedRoc", cooldown = 35, range = 4.0, windup = 0.08},
 }
 
 local function loadScript(url)
@@ -45,6 +45,12 @@ end
 local function getCharacterHumanoidAndRoot()
     local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
     return character:FindFirstChildOfClass("Humanoid"), character:FindFirstChild("HumanoidRootPart")
+end
+
+local function alignToTarget(hrp, targetRoot, range)
+    local distance = range or 3
+    local targetPosition = targetRoot.Position - (targetRoot.CFrame.LookVector * distance)
+    hrp.CFrame = CFrame.lookAt(targetPosition, targetRoot.Position)
 end
 
 if getgenv().KaidoAttackRunning then
@@ -78,7 +84,8 @@ task.spawn(function()
             for index, ability in ipairs(ABILITY_ORDER) do
                 if now >= (nextAbilityTimes[index] or 0) then
                     pcall(function()
-                        hrp.CFrame = CFrame.lookAt(hrp.Position, kaidoRoot.Position)
+                        alignToTarget(hrp, kaidoRoot, ability.range)
+                        task.wait(ability.windup or 0.05)
                         replicatorNoYield:FireServer("Nika", ability.name, {})
                     end)
                     nextAbilityTimes[index] = now + ability.cooldown
