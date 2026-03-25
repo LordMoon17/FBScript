@@ -80,6 +80,7 @@ task.spawn(function()
             for index, ability in ipairs(ABILITY_ORDER) do
                 if now >= (nextAbilityTimes[index] or 0) then
                     pcall(function()
+                        hrp.CFrame = CFrame.lookAt(hrp.Position, dummyRoot.Position)
                         replicatorNoYield:FireServer("Nika", ability.name, {})
                     end)
                     nextAbilityTimes[index] = now + ability.cooldown

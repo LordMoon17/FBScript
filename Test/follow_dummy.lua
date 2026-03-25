@@ -6,7 +6,7 @@ local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
 local LocalPlayer = Players.LocalPlayer
-local FOLLOW_OFFSET = Vector3.new(0, 2, -6)
+local FOLLOW_OFFSET = Vector3.new(0, 1.5, -4)
 local FOLLOW_DISTANCE_LIMIT = 35
 local TARGET_NAME = "Respawn Dummy"
 
