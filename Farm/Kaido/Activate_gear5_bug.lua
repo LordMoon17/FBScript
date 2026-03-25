@@ -5,6 +5,7 @@ local LocalPlayer = Players.LocalPlayer
 local replicator = ReplicatedStorage:WaitForChild("Replicator")
 local DRUM_TIMINGS = {1.916, 2.116, 2.050, 2.233}
 local RESET_WAIT = 0.5
+local REJOIN_WAIT = 12
 
 if getgenv().Gear5BugRunning then
     return
@@ -58,6 +59,8 @@ local function activateGear5Bug()
     if humanoid then
         humanoid.Health = 0
     end
+
+    task.wait(REJOIN_WAIT)
 
     local mainMenu = LocalPlayer.PlayerGui.UI.MainMenu
     repeat
