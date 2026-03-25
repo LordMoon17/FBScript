@@ -44,7 +44,8 @@ local function getKaidoModel(instance)
         return nil
     end
 
-    if not model:FindFirstChildOfClass("Humanoid") then
+    local humanoid = model:FindFirstChildOfClass("Humanoid")
+    if not humanoid or humanoid.Health <= 0 then
         return nil
     end
 

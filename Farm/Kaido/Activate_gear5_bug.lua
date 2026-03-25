@@ -51,6 +51,7 @@ local function activateGear5Bug()
         return
     end
 
+    getgenv().KaidoGear5Ready = true
     print("Gear5 activado, reiniciando...")
     task.wait(RESET_WAIT)
 

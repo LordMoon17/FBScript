@@ -35,6 +35,19 @@ local function getKaidoPosition()
 end
 
 local function runGear5Bug()
+    if getgenv().KaidoGear5Ready then
+        local success, result = pcall(function()
+            return game:HttpGet("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/Kaido/follow_kaido.lua")
+        end)
+
+        if success and result then
+            loadstring(result)()
+        else
+            warn("Error al cargar follow_kaido.lua: " .. tostring(result))
+        end
+        return
+    end
+
     task.wait(0.3)
     local success, result = pcall(function()
         return game:HttpGet("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/Kaido/Activate_gear5_bug.lua")

@@ -134,6 +134,7 @@ kaidoBtn.MouseButton1Click:Connect(function()
         kaidoBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
         kaidoBtn.Text = "Kaido: ON"
         getgenv().KaidoFarmEnabled = true
+        getgenv().KaidoGear5Ready = false
         loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Rejoin/Join.Lua")
         loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/Kaido/check.lua")
         print("Kaido Farm activado")
@@ -141,6 +142,7 @@ kaidoBtn.MouseButton1Click:Connect(function()
         kaidoBtn.BackgroundColor3 = Color3.fromRGB(150, 50, 50)
         kaidoBtn.Text = "Kaido: OFF"
         getgenv().KaidoFarmEnabled = false
+        getgenv().KaidoGear5Ready = false
         print("Kaido Farm desactivado")
     end
 end)
