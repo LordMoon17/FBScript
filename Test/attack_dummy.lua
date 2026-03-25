@@ -3,11 +3,11 @@
 -- ============================================
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local VirtualUser = game:GetService("VirtualUser")
 local Workspace = game:GetService("Workspace")
 
 local LocalPlayer = Players.LocalPlayer
 local replicatorNoYield = ReplicatedStorage:WaitForChild("ReplicatorNoYield")
+local replicator = ReplicatedStorage:WaitForChild("Replicator")
 local TARGET_NAME = "Respawn Dummy"
 
 local M1_BURST_COUNT = 5
@@ -69,10 +69,7 @@ task.spawn(function()
             if now >= nextM1Cycle then
                 for _ = 1, M1_BURST_COUNT do
                     pcall(function()
-                        VirtualUser:CaptureController()
-                        VirtualUser:Button1Down(Vector2.new(0, 0), Workspace.CurrentCamera.CFrame)
-                        task.wait(0.03)
-                        VirtualUser:Button1Up(Vector2.new(0, 0), Workspace.CurrentCamera.CFrame)
+                        replicator:InvokeServer("Core", "M1", {})
                     end)
                     task.wait(M1_BURST_INTERVAL)
                 end
