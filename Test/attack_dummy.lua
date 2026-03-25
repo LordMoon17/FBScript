@@ -10,12 +10,14 @@ local LocalPlayer = Players.LocalPlayer
 local replicatorNoYield = ReplicatedStorage:WaitForChild("ReplicatorNoYield")
 local TARGET_NAME = "Respawn Dummy"
 
-local M1_INTERVAL = 0.15
+local M1_BURST_COUNT = 5
+local M1_BURST_INTERVAL = 0.12
+local M1_CYCLE_COOLDOWN = 4
 local ABILITY_ORDER = {
-    {name = "RocGun", cooldown = 1.2},
-    {name = "NeoRedHawk", cooldown = 2.8},
-    {name = "RocGatling", cooldown = 4.0},
-    {name = "RedRoc", cooldown = 5.5},
+    {name = "RocGun", cooldown = 13},
+    {name = "NeoRedHawk", cooldown = 15},
+    {name = "RocGatling", cooldown = 17},
+    {name = "RedRoc", cooldown = 35},
 }
 
 local function getNearestDummyRoot(fromPosition)
@@ -55,7 +57,7 @@ getgenv().DummyAttackRunning = true
 
 task.spawn(function()
     local nextAbilityTimes = {}
-    local nextM1 = 0
+    local nextM1Cycle = 0
 
     while getgenv().DummyTestEnabled and getgenv().DummyAttackRunning do
         local humanoid, hrp = getCharacterHumanoidAndRoot()
@@ -64,14 +66,17 @@ task.spawn(function()
         if humanoid and hrp and humanoid.Health > 0 and dummyRoot then
             local now = os.clock()
 
-            if now >= nextM1 then
-                pcall(function()
-                    VirtualUser:CaptureController()
-                    VirtualUser:Button1Down(Vector2.new(0, 0), Workspace.CurrentCamera.CFrame)
-                    task.wait(0.03)
-                    VirtualUser:Button1Up(Vector2.new(0, 0), Workspace.CurrentCamera.CFrame)
-                end)
-                nextM1 = now + M1_INTERVAL
+            if now >= nextM1Cycle then
+                for _ = 1, M1_BURST_COUNT do
+                    pcall(function()
+                        VirtualUser:CaptureController()
+                        VirtualUser:Button1Down(Vector2.new(0, 0), Workspace.CurrentCamera.CFrame)
+                        task.wait(0.03)
+                        VirtualUser:Button1Up(Vector2.new(0, 0), Workspace.CurrentCamera.CFrame)
+                    end)
+                    task.wait(M1_BURST_INTERVAL)
+                end
+                nextM1Cycle = now + M1_CYCLE_COOLDOWN
             end
 
             for index, ability in ipairs(ABILITY_ORDER) do
