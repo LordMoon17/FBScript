@@ -9,6 +9,18 @@ local LocalPlayer = Players.LocalPlayer
 local FOLLOW_OFFSET = Vector3.new(0, 2, -7)
 local FOLLOW_DISTANCE_LIMIT = 30
 
+local function loadScript(url)
+    local success, result = pcall(function()
+        return game:HttpGet(url)
+    end)
+
+    if success and result then
+        loadstring(result)()
+    else
+        warn("Error al cargar script: " .. tostring(result))
+    end
+end
+
 local function getCharacterParts()
     local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
     local humanoid = character:FindFirstChildOfClass("Humanoid")
@@ -40,6 +52,8 @@ local function stopFollow()
 end
 
 stopFollow()
+
+loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/Kaido/attack_kaido.lua")
 
 getgenv().KaidoFollowConnection = RunService.Heartbeat:Connect(function()
     if getgenv().KaidoFarmEnabled == false then

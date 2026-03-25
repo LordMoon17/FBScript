@@ -73,8 +73,6 @@ local function activateGear5Bug()
     end
 
     loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Rejoin/Join.Lua")
-    task.wait(2)
-    loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/Kaido/follow_kaido.lua")
 
     task.wait(1)
     getgenv().Gear5BugRunning = false

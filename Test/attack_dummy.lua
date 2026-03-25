@@ -1,0 +1,94 @@
+-- ============================================
+-- Dummy Test - Attack Dummy
+-- ============================================
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local VirtualUser = game:GetService("VirtualUser")
+local Workspace = game:GetService("Workspace")
+
+local LocalPlayer = Players.LocalPlayer
+local replicatorNoYield = ReplicatedStorage:WaitForChild("ReplicatorNoYield")
+local TARGET_NAME = "Respawn Dummy"
+
+local M1_INTERVAL = 0.15
+local ABILITY_ORDER = {
+    {name = "RocGun", cooldown = 1.2},
+    {name = "NeoRedHawk", cooldown = 2.8},
+    {name = "RocGatling", cooldown = 4.0},
+    {name = "RedRoc", cooldown = 5.5},
+}
+
+local function getNearestDummyRoot(fromPosition)
+    local nearestRoot = nil
+    local nearestDistance = math.huge
+
+    for _, descendant in ipairs(Workspace:GetDescendants()) do
+        if descendant:IsA("Model") and descendant.Name == TARGET_NAME then
+            local root = descendant:FindFirstChild("HumanoidRootPart")
+                or descendant:FindFirstChild("PrimaryPart")
+                or descendant:FindFirstChildWhichIsA("BasePart")
+            local humanoid = descendant:FindFirstChildOfClass("Humanoid")
+
+            if root and humanoid and humanoid.Health > 0 then
+                local distance = (root.Position - fromPosition).Magnitude
+                if distance < nearestDistance then
+                    nearestDistance = distance
+                    nearestRoot = root
+                end
+            end
+        end
+    end
+
+    return nearestRoot
+end
+
+local function getCharacterHumanoidAndRoot()
+    local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    return character:FindFirstChildOfClass("Humanoid"), character:FindFirstChild("HumanoidRootPart")
+end
+
+if getgenv().DummyAttackRunning then
+    return
+end
+
+getgenv().DummyAttackRunning = true
+
+task.spawn(function()
+    local nextAbilityTimes = {}
+    local nextM1 = 0
+
+    while getgenv().DummyTestEnabled and getgenv().DummyAttackRunning do
+        local humanoid, hrp = getCharacterHumanoidAndRoot()
+        local dummyRoot = hrp and getNearestDummyRoot(hrp.Position) or nil
+
+        if humanoid and hrp and humanoid.Health > 0 and dummyRoot then
+            local now = os.clock()
+
+            if now >= nextM1 then
+                pcall(function()
+                    VirtualUser:CaptureController()
+                    VirtualUser:Button1Down(Vector2.new(0, 0), Workspace.CurrentCamera.CFrame)
+                    task.wait(0.03)
+                    VirtualUser:Button1Up(Vector2.new(0, 0), Workspace.CurrentCamera.CFrame)
+                end)
+                nextM1 = now + M1_INTERVAL
+            end
+
+            for index, ability in ipairs(ABILITY_ORDER) do
+                if now >= (nextAbilityTimes[index] or 0) then
+                    pcall(function()
+                        replicatorNoYield:FireServer("Nika", ability.name, {})
+                    end)
+                    nextAbilityTimes[index] = now + ability.cooldown
+                    task.wait(0.05)
+                end
+            end
+        end
+
+        task.wait(0.05)
+    end
+
+    getgenv().DummyAttackRunning = false
+end)
+
+print("Ataque a dummy activado")

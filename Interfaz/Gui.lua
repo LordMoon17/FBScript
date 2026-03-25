@@ -41,8 +41,8 @@ if not success then
 end
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 200, 0, 160)
-frame.Position = UDim2.new(0, 10, 0.5, -80)
+frame.Size = UDim2.new(0, 200, 0, 200)
+frame.Position = UDim2.new(0, 10, 0.5, -100)
 frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 frame.BorderSizePixel = 0
 frame.Active = true
@@ -110,6 +110,23 @@ local testCorner = Instance.new("UICorner")
 testCorner.CornerRadius = UDim.new(0, 6)
 testCorner.Parent = testBtn
 
+local dummyTestEnabled = false
+
+local dummyBtn = Instance.new("TextButton")
+dummyBtn.Size = UDim2.new(1, -20, 0, 30)
+dummyBtn.Position = UDim2.new(0, 10, 0, 134)
+dummyBtn.BackgroundColor3 = Color3.fromRGB(140, 90, 40)
+dummyBtn.BorderSizePixel = 0
+dummyBtn.Text = "Dummy Test: OFF"
+dummyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+dummyBtn.TextSize = 13
+dummyBtn.Font = Enum.Font.GothamBold
+dummyBtn.Parent = frame
+
+local dummyCorner = Instance.new("UICorner")
+dummyCorner.CornerRadius = UDim.new(0, 6)
+dummyCorner.Parent = dummyBtn
+
 kaidoBtn.MouseButton1Click:Connect(function()
     kaidoFarm = not kaidoFarm
 
@@ -131,4 +148,21 @@ end)
 testBtn.MouseButton1Click:Connect(function()
     loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/Kaido/test_kaido_flow.lua")
     print("Test de Kaido ejecutado")
+end)
+
+dummyBtn.MouseButton1Click:Connect(function()
+    dummyTestEnabled = not dummyTestEnabled
+
+    if dummyTestEnabled then
+        dummyBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+        dummyBtn.Text = "Dummy Test: ON"
+        getgenv().DummyTestEnabled = true
+        loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Test/test_dummy_flow.lua")
+        print("Test de dummy activado")
+    else
+        dummyBtn.BackgroundColor3 = Color3.fromRGB(140, 90, 40)
+        dummyBtn.Text = "Dummy Test: OFF"
+        getgenv().DummyTestEnabled = false
+        print("Test de dummy desactivado")
+    end
 end)

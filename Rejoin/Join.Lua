@@ -2,6 +2,7 @@
 -- Fruit Battlegrounds - Auto Play Button
 -- ============================================
 local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
 local LocalPlayer = Players.LocalPlayer
 
 local function loadScript(url)
@@ -14,6 +15,11 @@ local function loadScript(url)
     else
         warn("Error al cargar script: " .. tostring(result))
     end
+end
+
+local function hasKaidoInMap()
+    local kaido = Workspace:FindFirstChild("Kaido", true)
+    return kaido ~= nil
 end
 
 local function forceCameraToCharacter(character)
@@ -65,3 +71,8 @@ print("Personaje cargado correctamente")
 
 loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Habilidades%20bindeadas/nika_binds.lua")
 print("Binds de Nika cargados")
+
+if getgenv().KaidoFarmEnabled and hasKaidoInMap() then
+    loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/Kaido/reengage_kaido.lua")
+    print("Reenganche con Kaido cargado")
+end
