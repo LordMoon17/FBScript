@@ -55,6 +55,29 @@ local function alignToTarget(hrp, targetRoot, range)
     hrp.CFrame = CFrame.lookAt(targetPosition, targetRoot.Position)
 end
 
+local function castAbility(hrp, targetRoot, ability)
+    if ability.name == "NeoRedHawk" then
+        local offsets = {
+            -targetRoot.CFrame.LookVector * 2,
+            targetRoot.CFrame.LookVector * 2,
+            targetRoot.CFrame.RightVector * 2,
+            -targetRoot.CFrame.RightVector * 2,
+        }
+
+        for _, offset in ipairs(offsets) do
+            hrp.CFrame = CFrame.lookAt(targetRoot.Position + offset, targetRoot.Position)
+            task.wait(ability.windup or 0.05)
+            replicatorNoYield:FireServer("Nika", ability.name, {})
+            task.wait(0.05)
+        end
+        return
+    end
+
+    alignToTarget(hrp, targetRoot, ability.range)
+    task.wait(ability.windup or 0.05)
+    replicatorNoYield:FireServer("Nika", ability.name, {})
+end
+
 if getgenv().DummyAttackRunning then
     return
 end
@@ -86,9 +109,7 @@ task.spawn(function()
             for index, ability in ipairs(ABILITY_ORDER) do
                 if now >= (nextAbilityTimes[index] or 0) then
                     pcall(function()
-                        alignToTarget(hrp, dummyRoot, ability.range)
-                        task.wait(ability.windup or 0.05)
-                        replicatorNoYield:FireServer("Nika", ability.name, {})
+                        castAbility(hrp, dummyRoot, ability)
                     end)
                     nextAbilityTimes[index] = now + ability.cooldown
                     task.wait(0.05)
