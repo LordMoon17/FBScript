@@ -81,3 +81,28 @@ if getgenv().KaidoFarmEnabled then
         print("Reenganche con Kaido cargado")
     end
 end
+
+if getgenv().DummyCycleEnabled then
+    loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Test/dummy_death_recovery.lua")
+    print("Recuperacion de muerte dummy cargada")
+
+    local success, hasDummy = pcall(function()
+        for _, descendant in ipairs(Workspace:GetDescendants()) do
+            if descendant:IsA("Model") and descendant.Name == "Respawn Dummy" then
+                local humanoid = descendant:FindFirstChildOfClass("Humanoid")
+                if humanoid and humanoid.Health > 0 then
+                    return true
+                end
+            end
+        end
+        return false
+    end)
+
+    if success and hasDummy then
+        loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Test/ubication_dummy.lua")
+        print("Reenganche con dummy cargado")
+    else
+        loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Test/wait_dummy.lua")
+        print("Espera de dummy cargada")
+    end
+end

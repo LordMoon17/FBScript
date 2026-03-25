@@ -65,11 +65,29 @@ local function stopFollow()
     end
 end
 
+local function returnToWaitMode()
+    if getgenv().DummyReturnToWaitRunning then
+        return
+    end
+
+    getgenv().DummyReturnToWaitRunning = true
+    stopFollow()
+    getgenv().DummyAttackRunning = false
+    getgenv().DummyGear5Ready = false
+    task.wait(1)
+
+    if getgenv().DummyCycleEnabled then
+        loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Test/wait_dummy.lua")
+    end
+
+    getgenv().DummyReturnToWaitRunning = false
+end
+
 stopFollow()
 loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Test/attack_dummy.lua")
 
 getgenv().DummyFollowConnection = RunService.Heartbeat:Connect(function()
-    if getgenv().DummyTestEnabled == false then
+    if getgenv().DummyTestEnabled == false and getgenv().DummyCycleEnabled == false then
         stopFollow()
         return
     end
@@ -81,6 +99,9 @@ getgenv().DummyFollowConnection = RunService.Heartbeat:Connect(function()
 
     local dummyRoot = getNearestDummyRoot(hrp.Position)
     if not dummyRoot then
+        if getgenv().DummyCycleEnabled then
+            returnToWaitMode()
+        end
         return
     end
 

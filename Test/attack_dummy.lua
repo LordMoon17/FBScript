@@ -70,7 +70,7 @@ task.spawn(function()
     local nextAbilityTimes = {}
     local nextM1Cycle = 0
 
-    while getgenv().DummyTestEnabled and getgenv().DummyAttackRunning do
+    while (getgenv().DummyTestEnabled or getgenv().DummyCycleEnabled) and getgenv().DummyAttackRunning do
         local humanoid, hrp = getCharacterHumanoidAndRoot()
         local dummyRoot = hrp and getNearestDummyRoot(hrp.Position) or nil
 

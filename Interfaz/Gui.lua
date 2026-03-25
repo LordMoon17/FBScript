@@ -41,8 +41,8 @@ if not success then
 end
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 200, 0, 200)
-frame.Position = UDim2.new(0, 10, 0.5, -100)
+frame.Size = UDim2.new(0, 200, 0, 240)
+frame.Position = UDim2.new(0, 10, 0.5, -120)
 frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 frame.BorderSizePixel = 0
 frame.Active = true
@@ -127,6 +127,23 @@ local dummyCorner = Instance.new("UICorner")
 dummyCorner.CornerRadius = UDim.new(0, 6)
 dummyCorner.Parent = dummyBtn
 
+local dummyCycleEnabled = false
+
+local dummyCycleBtn = Instance.new("TextButton")
+dummyCycleBtn.Size = UDim2.new(1, -20, 0, 30)
+dummyCycleBtn.Position = UDim2.new(0, 10, 0, 170)
+dummyCycleBtn.BackgroundColor3 = Color3.fromRGB(80, 60, 120)
+dummyCycleBtn.BorderSizePixel = 0
+dummyCycleBtn.Text = "Dummy Cycle: OFF"
+dummyCycleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+dummyCycleBtn.TextSize = 13
+dummyCycleBtn.Font = Enum.Font.GothamBold
+dummyCycleBtn.Parent = frame
+
+local dummyCycleCorner = Instance.new("UICorner")
+dummyCycleCorner.CornerRadius = UDim.new(0, 6)
+dummyCycleCorner.Parent = dummyCycleBtn
+
 kaidoBtn.MouseButton1Click:Connect(function()
     kaidoFarm = not kaidoFarm
 
@@ -166,5 +183,24 @@ dummyBtn.MouseButton1Click:Connect(function()
         dummyBtn.Text = "Dummy Test: OFF"
         getgenv().DummyTestEnabled = false
         print("Test de dummy desactivado")
+    end
+end)
+
+dummyCycleBtn.MouseButton1Click:Connect(function()
+    dummyCycleEnabled = not dummyCycleEnabled
+
+    if dummyCycleEnabled then
+        dummyCycleBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+        dummyCycleBtn.Text = "Dummy Cycle: ON"
+        getgenv().DummyCycleEnabled = true
+        getgenv().DummyGear5Ready = false
+        loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Test/dummy_cycle_entry.lua")
+        print("Ciclo de dummy activado")
+    else
+        dummyCycleBtn.BackgroundColor3 = Color3.fromRGB(80, 60, 120)
+        dummyCycleBtn.Text = "Dummy Cycle: OFF"
+        getgenv().DummyCycleEnabled = false
+        getgenv().DummyGear5Ready = false
+        print("Ciclo de dummy desactivado")
     end
 end)
