@@ -16,6 +16,17 @@ local function loadScript(url)
     end
 end
 
+local function forceCameraToCharacter(character)
+    local humanoid = character:WaitForChild("Humanoid")
+    local camera = workspace.CurrentCamera
+
+    for _ = 1, 10 do
+        camera.CameraSubject = humanoid
+        camera.CameraType = Enum.CameraType.Follow
+        task.wait(0.2)
+    end
+end
+
 local button = LocalPlayer.PlayerGui.UI.MainMenu.Buttons.Play
 local Loader = nil
 
@@ -46,8 +57,7 @@ print("RemoteEvent disparado, entrando al juego...")
 
 local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 character:WaitForChild("HumanoidRootPart")
-workspace.CurrentCamera.CameraSubject = character:WaitForChild("Humanoid")
-workspace.CurrentCamera.CameraType = Enum.CameraType.Follow
+forceCameraToCharacter(character)
 print("Camara forzada al personaje")
 
 task.wait(2)

@@ -57,7 +57,8 @@ local frutaActual = slotActual and slotActual.Value or nil
 print("Fruta equipada: " .. tostring(frutaActual))
 
 if frutaActual == "Nika" then
-    print("Nika ya esta equipada, continuando...")
+    print("Nika ya esta equipada, esperando a Kaido...")
+    loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/Kaido/wait_kaido.lua")
     return
 end
 

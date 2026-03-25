@@ -1,37 +1,52 @@
-local player = game:GetService("Players").LocalPlayer
-local replicator = game:GetService("ReplicatedStorage"):WaitForChild("Replicator")
-local UIS = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local pressCount = 0
-local resetting = false
+local LocalPlayer = Players.LocalPlayer
+local replicator = ReplicatedStorage:WaitForChild("Replicator")
 
-UIS.InputBegan:Connect(function(input, gp)
-    if gp or resetting then return end
-    if input.KeyCode == Enum.KeyCode.G then
-        pressCount = pressCount + 1
-        print("🎯 Press " .. pressCount .. "/5")
-        
+if getgenv().Gear5BugRunning then
+    return
+end
+
+getgenv().Gear5BugRunning = true
+
+local function activateGear5Bug()
+    for press = 1, 4 do
         local ok, err = pcall(function()
-            if pressCount >= 5 then
-                resetting = true
-                replicator:InvokeServer("Nika", "Gear5", {})
-                pressCount = 0
-                print("⭐ Gear5 activado! Reiniciando en 0.5 segundos...")
-                task.wait(0.5)
-                player.Character.Humanoid.Health = 0
-                print("✅ Reiniciado")
-                task.wait(1)
-                resetting = false
-            else
-                replicator:InvokeServer("Nika", "DrumsofLiberation", {})
-                print("🥁 Drums " .. pressCount .. "/4")
-            end
+            replicator:InvokeServer("Nika", "DrumsofLiberation", {})
         end)
-        if not ok then 
-            print("❌ " .. tostring(err))
-            resetting = false
-        end
-    end
-end)
 
-print("✅ G bindeada - Nika Awakening + Auto Reinicio")
+        if not ok then
+            warn("Error activando DrumsofLiberation: " .. tostring(err))
+            getgenv().Gear5BugRunning = false
+            return
+        end
+
+        print("Drums " .. press .. "/4")
+        task.wait(0.2)
+    end
+
+    local ok, err = pcall(function()
+        replicator:InvokeServer("Nika", "Gear5", {})
+    end)
+
+    if not ok then
+        warn("Error activando Gear5: " .. tostring(err))
+        getgenv().Gear5BugRunning = false
+        return
+    end
+
+    print("Gear5 activado, reiniciando...")
+    task.wait(0.5)
+
+    local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid.Health = 0
+    end
+
+    task.wait(1)
+    getgenv().Gear5BugRunning = false
+end
+
+task.spawn(activateGear5Bug)

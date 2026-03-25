@@ -41,8 +41,8 @@ if not success then
 end
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 200, 0, 120)
-frame.Position = UDim2.new(0, 10, 0.5, -60)
+frame.Size = UDim2.new(0, 200, 0, 160)
+frame.Position = UDim2.new(0, 10, 0.5, -80)
 frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 frame.BorderSizePixel = 0
 frame.Active = true
@@ -95,6 +95,21 @@ local kaidoCorner = Instance.new("UICorner")
 kaidoCorner.CornerRadius = UDim.new(0, 6)
 kaidoCorner.Parent = kaidoBtn
 
+local testBtn = Instance.new("TextButton")
+testBtn.Size = UDim2.new(1, -20, 0, 30)
+testBtn.Position = UDim2.new(0, 10, 0, 98)
+testBtn.BackgroundColor3 = Color3.fromRGB(60, 90, 150)
+testBtn.BorderSizePixel = 0
+testBtn.Text = "Test TP + Bug"
+testBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+testBtn.TextSize = 13
+testBtn.Font = Enum.Font.GothamBold
+testBtn.Parent = frame
+
+local testCorner = Instance.new("UICorner")
+testCorner.CornerRadius = UDim.new(0, 6)
+testCorner.Parent = testBtn
+
 kaidoBtn.MouseButton1Click:Connect(function()
     kaidoFarm = not kaidoFarm
 
@@ -111,4 +126,9 @@ kaidoBtn.MouseButton1Click:Connect(function()
         getgenv().KaidoFarmEnabled = false
         print("Kaido Farm desactivado")
     end
+end)
+
+testBtn.MouseButton1Click:Connect(function()
+    loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/Kaido/test_kaido_flow.lua")
+    print("Test de Kaido ejecutado")
 end)
