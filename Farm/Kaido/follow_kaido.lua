@@ -67,6 +67,7 @@ local function returnToWaitMode()
     getgenv().KaidoReturnToWaitRunning = true
     stopFollow()
     getgenv().KaidoAttackRunning = false
+    getgenv().KaidoGear5Ready = false
     task.wait(1)
 
     if getgenv().KaidoFarmEnabled then
