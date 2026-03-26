@@ -77,10 +77,6 @@ print("Personaje cargado correctamente")
 loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Habilidades%20bindeadas/nika_binds.lua")
 print("Binds de Nika cargados")
 
-loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Notifier/discord_notify.lua")
-loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Notifier/disconnect_watcher.lua")
-print("Notificador de Discord cargado")
-
 if getgenv().KaidoFarmEnabled then
     loadScript("https://raw.githubusercontent.com/LordMoon17/FBScript/main/Farm/Kaido/death_recovery.lua")
     print("Recuperacion de muerte cargada")

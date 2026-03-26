@@ -93,15 +93,6 @@ getgenv().KatakuriFollowConnection = RunService.Heartbeat:Connect(function()
 
     local bossHumanoid = bossModel:FindFirstChildOfClass("Humanoid")
     if not bossHumanoid or bossHumanoid.Health <= 0 then
-        if not getgenv().KatakuriKillNotified and getgenv().SendDiscordAlert then
-            getgenv().KatakuriKillNotified = true
-            getgenv().SendDiscordAlert(
-                "katakuri_kill",
-                "Katakuri Derrotado",
-                "Katakuri fue derrotado correctamente.",
-                5763719
-            )
-        end
         returnToWaitMode()
         return
     end
@@ -119,5 +110,4 @@ getgenv().KatakuriFollowConnection = RunService.Heartbeat:Connect(function()
     hrp.CFrame = hrp.CFrame:Lerp(CFrame.new(targetPosition, bossRoot.Position), 0.35)
 end)
 
-getgenv().KatakuriKillNotified = false
 print("Seguimiento de Katakuri activado")
