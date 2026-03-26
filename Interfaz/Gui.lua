@@ -41,8 +41,8 @@ if not success then
 end
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 220, 0, 280)
-frame.Position = UDim2.new(0, 10, 0.5, -140)
+frame.Size = UDim2.new(0, 220, 0, 380)
+frame.Position = UDim2.new(0, 10, 0.5, -190)
 frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 frame.BorderSizePixel = 0
 frame.Active = true
@@ -157,6 +157,107 @@ dummyCycleBtn.Parent = frame
 local dummyCycleCorner = Instance.new("UICorner")
 dummyCycleCorner.CornerRadius = UDim.new(0, 6)
 dummyCycleCorner.Parent = dummyCycleBtn
+
+local notifyLabel = Instance.new("TextLabel")
+notifyLabel.Size = UDim2.new(1, -20, 0, 20)
+notifyLabel.Position = UDim2.new(0, 10, 0, 242)
+notifyLabel.BackgroundTransparency = 1
+notifyLabel.Text = "DISCORD NOTIFIER"
+notifyLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
+notifyLabel.TextSize = 11
+notifyLabel.Font = Enum.Font.GothamBold
+notifyLabel.Parent = frame
+
+local webhookBox = Instance.new("TextBox")
+webhookBox.Size = UDim2.new(1, -20, 0, 34)
+webhookBox.Position = UDim2.new(0, 10, 0, 266)
+webhookBox.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+webhookBox.BorderSizePixel = 0
+webhookBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+webhookBox.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
+webhookBox.PlaceholderText = "Pega tu Discord webhook aqui..."
+webhookBox.TextSize = 12
+webhookBox.Font = Enum.Font.Gotham
+webhookBox.ClearTextOnFocus = false
+webhookBox.TextXAlignment = Enum.TextXAlignment.Left
+webhookBox.Parent = frame
+
+local webhookBoxPadding = Instance.new("UIPadding")
+webhookBoxPadding.PaddingLeft = UDim.new(0, 8)
+webhookBoxPadding.PaddingRight = UDim.new(0, 8)
+webhookBoxPadding.Parent = webhookBox
+
+local webhookCorner = Instance.new("UICorner")
+webhookCorner.CornerRadius = UDim.new(0, 6)
+webhookCorner.Parent = webhookBox
+
+local saveWebhookBtn = Instance.new("TextButton")
+saveWebhookBtn.Size = UDim2.new(1, -20, 0, 30)
+saveWebhookBtn.Position = UDim2.new(0, 10, 0, 306)
+saveWebhookBtn.BackgroundColor3 = Color3.fromRGB(60, 90, 150)
+saveWebhookBtn.BorderSizePixel = 0
+saveWebhookBtn.Text = "Guardar Webhook"
+saveWebhookBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+saveWebhookBtn.TextSize = 13
+saveWebhookBtn.Font = Enum.Font.GothamBold
+saveWebhookBtn.Parent = frame
+
+local saveWebhookCorner = Instance.new("UICorner")
+saveWebhookCorner.CornerRadius = UDim.new(0, 6)
+saveWebhookCorner.Parent = saveWebhookBtn
+
+local webhookStatus = Instance.new("TextLabel")
+webhookStatus.Size = UDim2.new(1, -20, 0, 18)
+webhookStatus.Position = UDim2.new(0, 10, 0, 342)
+webhookStatus.BackgroundTransparency = 1
+webhookStatus.Text = "Webhook: no configurado"
+webhookStatus.TextColor3 = Color3.fromRGB(200, 120, 120)
+webhookStatus.TextSize = 11
+webhookStatus.Font = Enum.Font.Gotham
+webhookStatus.TextXAlignment = Enum.TextXAlignment.Left
+webhookStatus.Parent = frame
+
+if type(getgenv().DiscordWebhookURL) == "string" and getgenv().DiscordWebhookURL ~= "" then
+    webhookBox.Text = getgenv().DiscordWebhookURL
+    webhookStatus.Text = "Webhook: configurado"
+    webhookStatus.TextColor3 = Color3.fromRGB(120, 200, 120)
+end
+
+local function isValidWebhook(url)
+    if type(url) ~= "string" then
+        return false
+    end
+
+    local trimmed = string.gsub(url, "^%s*(.-)%s*$", "%1")
+    if trimmed == "" then
+        return false
+    end
+
+    if string.find(trimmed, "discord.com/api/webhooks/", 1, true) then
+        return true
+    end
+
+    if string.find(trimmed, "discordapp.com/api/webhooks/", 1, true) then
+        return true
+    end
+
+    return false
+end
+
+saveWebhookBtn.MouseButton1Click:Connect(function()
+    local url = string.gsub(webhookBox.Text or "", "^%s*(.-)%s*$", "%1")
+    if not isValidWebhook(url) then
+        webhookStatus.Text = "Webhook invalido"
+        webhookStatus.TextColor3 = Color3.fromRGB(220, 90, 90)
+        return
+    end
+
+    getgenv().DiscordWebhookURL = url
+    getgenv().DiscordNotifyEnabled = true
+    webhookStatus.Text = "Webhook guardado y notificador activo"
+    webhookStatus.TextColor3 = Color3.fromRGB(120, 200, 120)
+    print("Webhook de Discord guardado")
+end)
 
 kaidoBtn.MouseButton1Click:Connect(function()
     kaidoFarm = not kaidoFarm

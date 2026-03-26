@@ -93,6 +93,15 @@ getgenv().CakeQueenFollowConnection = RunService.Heartbeat:Connect(function()
 
     local bossHumanoid = bossModel:FindFirstChildOfClass("Humanoid")
     if not bossHumanoid or bossHumanoid.Health <= 0 then
+        if not getgenv().CakeQueenKillNotified and getgenv().SendDiscordAlert then
+            getgenv().CakeQueenKillNotified = true
+            getgenv().SendDiscordAlert(
+                "cakequeen_kill",
+                "Cake Queen Derrotada",
+                "Cake Queen fue derrotada correctamente.",
+                3447003
+            )
+        end
         returnToWaitMode()
         return
     end
@@ -110,4 +119,5 @@ getgenv().CakeQueenFollowConnection = RunService.Heartbeat:Connect(function()
     hrp.CFrame = hrp.CFrame:Lerp(CFrame.new(targetPosition, bossRoot.Position), 0.35)
 end)
 
+getgenv().CakeQueenKillNotified = false
 print("Seguimiento de Cake Queen activado")
